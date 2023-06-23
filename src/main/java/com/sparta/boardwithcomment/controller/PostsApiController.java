@@ -2,8 +2,10 @@ package com.sparta.boardwithcomment.controller;
 
 import com.sparta.boardwithcomment.dto.PostsRequestDto;
 import com.sparta.boardwithcomment.dto.PostsResponseDto;
+import com.sparta.boardwithcomment.security.UserDetailsImpl;
 import com.sparta.boardwithcomment.service.PostsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -33,13 +35,13 @@ public class PostsApiController {
     }
 
     @PutMapping("/posts/{id}")
-    public PostsResponseDto update(@PathVariable Long id, @RequestBody PostsRequestDto requestDto) {
-        return postsService.update(id, requestDto);
+    public PostsResponseDto update(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody PostsRequestDto requestDto) {
+        return postsService.update(userDetails, id, requestDto);
     }
 
     @DeleteMapping("/posts/{id}")
-    public Map<String, Boolean> delete(@PathVariable Long id) {
-        boolean isDeleted = postsService.delete(id);
+    public Map<String, Boolean> delete(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
+        boolean isDeleted = postsService.delete(userDetails, id);
         Map<String, Boolean> response = new HashMap<>();
         response.put("success", isDeleted);
         return response;
