@@ -3,6 +3,7 @@ package com.sparta.boardwithcomment.config;
 import com.sparta.boardwithcomment.jwt.JwtAuthenticationFilter;
 import com.sparta.boardwithcomment.jwt.JwtAuthorizationFilter;
 import com.sparta.boardwithcomment.jwt.JwtUtil;
+import com.sparta.boardwithcomment.security.AuthenticationSuccessHandlerImpl;
 import com.sparta.boardwithcomment.security.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -37,7 +39,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, authenticationSuccessHandler());
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
@@ -46,10 +48,10 @@ public class WebSecurityConfig {
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
         return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
     }
-//    @Bean
-//    public AuthenticationSuccessHandler authenticationSuccessHandler(){
-//        return new AuthenticationSuccessHandlerImpl();
-//    }
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+        return new AuthenticationSuccessHandlerImpl();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

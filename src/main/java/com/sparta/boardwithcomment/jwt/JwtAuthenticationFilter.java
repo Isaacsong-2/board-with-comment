@@ -4,14 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.boardwithcomment.dto.LoginRequestDto;
 import com.sparta.boardwithcomment.dto.LoginResponseDto;
 import com.sparta.boardwithcomment.entity.UserRoleEnum;
+import com.sparta.boardwithcomment.security.AuthenticationSuccessHandlerImpl;
 import com.sparta.boardwithcomment.security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -19,16 +23,14 @@ import java.io.IOException;
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, AuthenticationSuccessHandler authenticationSuccessHandler) {
         this.jwtUtil = jwtUtil;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
         setFilterProcessesUrl("/api/auth/login");
-//        setAuthenticationSuccessHandler(authenticationSuccessHandler());
+        setAuthenticationSuccessHandler(authenticationSuccessHandler);
     }
-
-//    public AuthenticationSuccessHandler authenticationSuccessHandler(){
-//        return new AuthenticationSuccessHandlerImpl();
-//    }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -49,16 +51,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
         String token = jwtUtil.createToken(username, role);
-
-        LoginResponseDto responseDto = new LoginResponseDto("login success", 200);
-        response.setContentType("application/json");
-        response.getOutputStream().print(responseDto.toString());
-
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+
+        this.authenticationSuccessHandler.onAuthenticationSuccess(request, response, authResult);
         log.info("로그인성공");
     }
 
