@@ -33,6 +33,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원 저장 실패");
         }
         userService.signup(requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body("회원 저장 성공");
+        return ResponseEntity.status(HttpStatus.OK).body("회원가입 성공");
     }
 }

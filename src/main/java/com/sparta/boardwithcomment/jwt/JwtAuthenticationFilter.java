@@ -2,6 +2,7 @@ package com.sparta.boardwithcomment.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.boardwithcomment.dto.LoginRequestDto;
+import com.sparta.boardwithcomment.dto.LoginResponseDto;
 import com.sparta.boardwithcomment.entity.UserRoleEnum;
 import com.sparta.boardwithcomment.security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
@@ -43,12 +44,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
-
         String token = jwtUtil.createToken(username, role);
+
+        LoginResponseDto responseDto = new LoginResponseDto("login success", 200);
+        response.setContentType("application/json");
+        response.getOutputStream().print(responseDto.toString());
+
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+        log.info("로그인성공");
     }
 
     @Override
