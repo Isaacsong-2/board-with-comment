@@ -3,7 +3,6 @@ package com.sparta.boardwithcomment.service;
 import com.sparta.boardwithcomment.dto.PostsRequestDto;
 import com.sparta.boardwithcomment.dto.PostsResponseDto;
 import com.sparta.boardwithcomment.entity.Posts;
-import com.sparta.boardwithcomment.entity.UserRoleEnum;
 import com.sparta.boardwithcomment.repository.PostsRepository;
 import com.sparta.boardwithcomment.repository.UserRepository;
 import com.sparta.boardwithcomment.security.UserDetailsImpl;
