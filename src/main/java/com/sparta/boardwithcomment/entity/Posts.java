@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @Getter
@@ -20,6 +23,9 @@ public class Posts extends TimeStamped{
     private String content;
     @Column(nullable = false)
     private String username;
+
+    @OneToMany(mappedBy = "posts")
+    private List<Comment> commentList = new ArrayList<>();
 
     @Builder
     public Posts(String title, String content, String username){

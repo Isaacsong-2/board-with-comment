@@ -2,16 +2,13 @@ package com.sparta.boardwithcomment.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.boardwithcomment.dto.LoginRequestDto;
-import com.sparta.boardwithcomment.dto.LoginResponseDto;
 import com.sparta.boardwithcomment.entity.UserRoleEnum;
-import com.sparta.boardwithcomment.security.AuthenticationSuccessHandlerImpl;
 import com.sparta.boardwithcomment.security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;

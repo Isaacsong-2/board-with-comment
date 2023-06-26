@@ -20,8 +20,8 @@ public class PostsApiController {
     private final PostsService postsService;
 
     @PostMapping("/post")
-    public PostsResponseDto save(@RequestBody PostsRequestDto requestDto){
-        return postsService.save(requestDto);
+    public PostsResponseDto save(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody PostsRequestDto requestDto){
+        return postsService.save(userDetails, requestDto);
     }
 
     @GetMapping("/posts")

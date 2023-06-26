@@ -12,7 +12,7 @@ import java.io.IOException;
 public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.setStatus(HttpServletResponse.SC_OK);
         LoginResponseDto responseDto = new LoginResponseDto("login success", 200);
         response.setContentType("application/json");
         response.getOutputStream().print(responseDto.toString());

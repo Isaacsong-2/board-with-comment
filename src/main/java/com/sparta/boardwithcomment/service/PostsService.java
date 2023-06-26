@@ -23,11 +23,8 @@ public class PostsService {
 
     private final UserRepository userRepository;
     private final PostsRepository postsRepository;
-    public PostsResponseDto save(PostsRequestDto requestDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        System.out.println(username);
+    public PostsResponseDto save(UserDetailsImpl userDetails, PostsRequestDto requestDto) {
+        String username = userDetails.getUsername();
         requestDto.setUsername(username);
         return new PostsResponseDto(postsRepository.save(requestDto.toEntity()));
     }
