@@ -22,10 +22,13 @@ public class Comment extends TimeStamped{
     @JoinColumn(name = "post_id", nullable = false)
     private Posts posts;
 
+    private String username;
+
     @Builder
-    public Comment(String content, Posts posts){
+    public Comment(String content, Posts posts, String username){
         this.content = content;
         this.posts = posts;
+        this.username = username;
     }
 
     public void update(CommentUpdateRequestDto requestDto) {

@@ -21,17 +21,15 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     public CommentResponseDto save(UserDetailsImpl userDetails, CommentRequestDto requestDto) {
-        System.out.println(requestDto.getPostId());
         Posts posts = postsRepository.findById(requestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
-        Comment comment = new Comment(requestDto.getContent(), posts);
+        Comment comment = new Comment(requestDto.getContent(), posts, userDetails.getUsername());
         commentRepository.save(comment);
         return new CommentResponseDto(comment, userDetails.getUsername());
     }
 
     public CommentResponseDto update(Long id, UserDetailsImpl userDetails, CommentUpdateRequestDto requestDto) {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
-        System.out.println(userDetails.getUsername() + comment.getPosts().getUsername());
-        if (userDetails.getUsername().equals(comment.getPosts().getUsername()) || userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(role -> role.equals("ROLE_ADMIN"))) {
+        if (userDetails.getUsername().equals(comment.getUsername()) || userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(role -> role.equals("ROLE_ADMIN"))) {
             comment.update(requestDto);
         } else throw new IllegalArgumentException("수정 권한이 없습니다.");
         return new CommentResponseDto(comment, userDetails.getUsername());
@@ -39,7 +37,7 @@ public class CommentService {
 
     public void delete(Long id, UserDetailsImpl userDetails) {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
-        if (userDetails.getUsername().equals(comment.getPosts().getUsername()) || userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(role -> role.equals("ROLE_ADMIN"))) {
+        if (userDetails.getUsername().equals(comment.getUsername()) || userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(role -> role.equals("ROLE_ADMIN"))) {
             commentRepository.delete(comment);
         } else throw new IllegalArgumentException("삭제 권한이 없습니다.");
     }
