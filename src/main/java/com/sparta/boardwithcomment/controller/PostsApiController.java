@@ -20,8 +20,9 @@ public class PostsApiController {
     private final PostsService postsService;
 
     @PostMapping("/post")
-    public PostsResponseDto save(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody PostsRequestDto requestDto){
-        return postsService.save(userDetails, requestDto);
+    public ResponseEntity<?> save(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody PostsRequestDto requestDto) {
+        if (userDetails == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("토큰이 유효하지 않습니다.");
+        return ResponseEntity.ok(postsService.save(userDetails, requestDto));
     }
 
     @GetMapping("/posts")
@@ -35,12 +36,18 @@ public class PostsApiController {
     }
 
     @PutMapping("/posts/{id}")
-    public PostsResponseDto update(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody PostsRequestDto requestDto) {
-        return postsService.update(userDetails, id, requestDto);
+    public ResponseEntity<?> update(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody PostsRequestDto requestDto) {
+        if (userDetails == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("토큰이 유효하지 않습니다.");
+        try {
+            return ResponseEntity.ok(postsService.update(userDetails, id, requestDto));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<String> delete(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
+        if (userDetails == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("토큰이 유효하지 않습니다.");
         try {
             postsService.delete(userDetails, id);
             return ResponseEntity.status(HttpStatus.OK).body("게시글 삭제 성공");
