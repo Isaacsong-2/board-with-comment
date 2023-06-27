@@ -25,7 +25,7 @@ public class CommentService {
         Posts posts = postsRepository.findById(requestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
         Comment comment = new Comment(requestDto.getContent(), posts);
         commentRepository.save(comment);
-        return new CommentResponseDto(comment, posts.getUsername());
+        return new CommentResponseDto(comment, userDetails.getUsername());
     }
 
     public CommentResponseDto update(Long id, UserDetailsImpl userDetails, CommentUpdateRequestDto requestDto) {
