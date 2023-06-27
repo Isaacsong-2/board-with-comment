@@ -1,5 +1,6 @@
 package com.sparta.boardwithcomment.entity;
 
+import com.sparta.boardwithcomment.dto.CommentUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,5 +26,9 @@ public class Comment extends TimeStamped{
     public Comment(String content, Posts posts){
         this.content = content;
         this.posts = posts;
+    }
+
+    public void update(CommentUpdateRequestDto requestDto) {
+        this.content = requestDto.getContent();
     }
 }

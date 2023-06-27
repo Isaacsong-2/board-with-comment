@@ -4,12 +4,9 @@ import com.sparta.boardwithcomment.dto.PostsRequestDto;
 import com.sparta.boardwithcomment.dto.PostsResponseDto;
 import com.sparta.boardwithcomment.entity.Posts;
 import com.sparta.boardwithcomment.repository.PostsRepository;
-import com.sparta.boardwithcomment.repository.UserRepository;
 import com.sparta.boardwithcomment.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +17,6 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class PostsService {
-
-    private final UserRepository userRepository;
     private final PostsRepository postsRepository;
     public PostsResponseDto save(UserDetailsImpl userDetails, PostsRequestDto requestDto) {
         String username = userDetails.getUsername();
