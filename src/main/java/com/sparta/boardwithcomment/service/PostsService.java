@@ -43,24 +43,21 @@ public class PostsService {
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
         if (posts.getUsername().equals(userDetails.getUsername()) ||
                 userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                .anyMatch(role -> role.equals("ROLE_ADMIN"))){
+                        .anyMatch(role -> role.equals("ROLE_ADMIN"))) {
             posts.update(requestDto);
             return new PostsResponseDto(posts);
-        }
-        return null;
+        } else throw new IllegalArgumentException("수정 권한이 없습니다.");
     }
 
     @Transactional
-    public boolean delete(UserDetailsImpl userDetails, Long id) {
+    public void delete(UserDetailsImpl userDetails, Long id) {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Posts posts = postsRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
         if (posts.getUsername().equals(userDetails.getUsername()) ||
                 userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                        .anyMatch(role -> role.equals("ROLE_ADMIN"))){
+                        .anyMatch(role -> role.equals("ROLE_ADMIN"))) {
             postsRepository.delete(posts);
-            return true;
-        }
-        return false;
+        } else throw new IllegalArgumentException("삭제 권한이 없습니다.");
     }
 }

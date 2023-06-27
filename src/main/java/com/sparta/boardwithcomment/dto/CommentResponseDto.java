@@ -1,7 +1,6 @@
 package com.sparta.boardwithcomment.dto;
 
 import com.sparta.boardwithcomment.entity.Comment;
-import com.sparta.boardwithcomment.entity.Posts;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
