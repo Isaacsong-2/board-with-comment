@@ -2,6 +2,7 @@ package com.sparta.boardwithcomment.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.boardwithcomment.dto.LoginRequestDto;
+import com.sparta.boardwithcomment.dto.LoginResponseDto;
 import com.sparta.boardwithcomment.entity.UserRoleEnum;
 import com.sparta.boardwithcomment.security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
@@ -53,8 +54,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
         String token = jwtUtil.createToken(username, role);
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
-
-        this.authenticationSuccessHandler.onAuthenticationSuccess(request, response, authResult);
+        authenticationSuccessHandler.onAuthenticationSuccess(request, response, authResult);
         log.info("로그인성공");
     }
 
