@@ -17,4 +17,12 @@ public class PostsRequestDto {
         this.title = title;
         this.content = content;
     }
+
+    public Posts toEntity(User user){
+        return Posts.builder()
+                .title(title)
+                .content(content)
+                .user(user)
+                .build();
+    }
 }

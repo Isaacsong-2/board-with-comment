@@ -21,7 +21,7 @@ public class PostsApiController {
 
     @PostMapping("/post")
     public ResponseEntity<?> save(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody PostsRequestDto requestDto) {
-        if (userDetails == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("토큰이 유효하지 않습니다.");
+        checkToken(userDetails);
         return ResponseEntity.ok(postsService.save(userDetails, requestDto));
     }
 
@@ -37,22 +37,18 @@ public class PostsApiController {
 
     @PutMapping("/posts/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody PostsRequestDto requestDto) {
-        if (userDetails == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("토큰이 유효하지 않습니다.");
-        try {
-            return ResponseEntity.ok(postsService.update(userDetails, id, requestDto));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        checkToken(userDetails);
+        return ResponseEntity.ok(postsService.update(userDetails, id, requestDto));
     }
 
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<String> delete(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
-        if (userDetails == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("토큰이 유효하지 않습니다.");
-        try {
-            postsService.delete(userDetails, id);
-            return ResponseEntity.status(HttpStatus.OK).body("게시글 삭제 성공");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        checkToken(userDetails);
+        postsService.delete(userDetails, id);
+        return ResponseEntity.status(HttpStatus.OK).body("게시글 삭제 성공");
+    }
+
+    private void checkToken(UserDetailsImpl userDetails) {
+        if (userDetails == null) throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
     }
 }
