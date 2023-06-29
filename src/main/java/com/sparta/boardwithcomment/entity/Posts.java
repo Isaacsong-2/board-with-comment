@@ -21,17 +21,21 @@ public class Posts extends TimeStamped{
     private String title;
     @Column(nullable = false)
     private String content;
-    @Column(nullable = false)
-    private String username;
+//    @Column(nullable = false)
+//    private String username;
+
+    @ManyToOne
+    private User user;
 
     @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
+
     @Builder
-    public Posts(String title, String content, String username){
+    public Posts(String title, String content, User user){
         this.title = title;
         this.content = content;
-        this.username = username;
+        this.user = user;
     }
 
     public void update(PostsRequestDto requestDto) {

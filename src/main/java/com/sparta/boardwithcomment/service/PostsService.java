@@ -19,9 +19,12 @@ import java.util.stream.Collectors;
 public class PostsService {
     private final PostsRepository postsRepository;
     public PostsResponseDto save(UserDetailsImpl userDetails, PostsRequestDto requestDto) {
-        String username = userDetails.getUsername();
-        requestDto.setUsername(username);
-        return new PostsResponseDto(postsRepository.save(requestDto.toEntity()));
+        Posts posts = Posts.builder()
+                            .title(requestDto.getTitle())
+                            .content(requestDto.getContent())
+                            .user(userDetails.getUser())
+                            .build();
+        return new PostsResponseDto(postsRepository.save(posts));
     }
 
     public List<PostsResponseDto> findAll() {
@@ -41,7 +44,7 @@ public class PostsService {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Posts posts = postsRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
-        if (posts.getUsername().equals(userDetails.getUsername()) ||
+        if (posts.getUser().getUsername().equals(userDetails.getUsername()) ||
                 userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                         .anyMatch(role -> role.equals("ROLE_ADMIN"))) {
             posts.update(requestDto);
@@ -54,7 +57,7 @@ public class PostsService {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Posts posts = postsRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
-        if (posts.getUsername().equals(userDetails.getUsername()) ||
+        if (posts.getUser().getUsername().equals(userDetails.getUsername()) ||
                 userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                         .anyMatch(role -> role.equals("ROLE_ADMIN"))) {
             postsRepository.delete(posts);

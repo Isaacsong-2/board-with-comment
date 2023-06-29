@@ -25,7 +25,7 @@ public class PostsResponseDto {
         Collections.sort(comments, Comparator.comparing(Comment::getCreatedAt).reversed());
         this.title = posts.getTitle();
         this.content = posts.getContent();
-        this.username = posts.getUsername();
+        this.username = posts.getUser().getUsername();
         this.createdAt = posts.getCreatedAt();
         this.modifiedAt = posts.getModifiedAt();
         for (Comment comment : posts.getCommentList()) {
