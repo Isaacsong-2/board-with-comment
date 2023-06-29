@@ -17,6 +17,8 @@ public class UserRequestDto {
     @Pattern(regexp = "^[a-zA-z0-9]+$")
     private String password;
 
-    private boolean admin = false;
-    private String adminToken = "";
+    private boolean admin = true;
+    private String adminToken = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+//    private boolean admin = false;
+//    private String adminToken = "";
 }

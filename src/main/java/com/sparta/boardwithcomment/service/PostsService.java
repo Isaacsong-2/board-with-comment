@@ -3,6 +3,7 @@ package com.sparta.boardwithcomment.service;
 import com.sparta.boardwithcomment.dto.PostsRequestDto;
 import com.sparta.boardwithcomment.dto.PostsResponseDto;
 import com.sparta.boardwithcomment.entity.Posts;
+import com.sparta.boardwithcomment.entity.UserRoleEnum;
 import com.sparta.boardwithcomment.repository.PostsRepository;
 import com.sparta.boardwithcomment.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,8 +47,7 @@ public class PostsService {
         Posts posts = postsRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
         if (posts.getUser().getUsername().equals(userDetails.getUsername()) ||
-                userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                        .anyMatch(role -> role.equals("ROLE_ADMIN"))) {
+                userDetails.getRole().equals(UserRoleEnum.ADMIN.toString())) {
             posts.update(requestDto);
             return new PostsResponseDto(posts);
         } else throw new IllegalArgumentException("수정 권한이 없습니다.");
@@ -58,8 +59,7 @@ public class PostsService {
         Posts posts = postsRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
         if (posts.getUser().getUsername().equals(userDetails.getUsername()) ||
-                userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                        .anyMatch(role -> role.equals("ROLE_ADMIN"))) {
+                userDetails.getRole().equals(UserRoleEnum.ADMIN.toString())) {
             postsRepository.delete(posts);
         } else throw new IllegalArgumentException("삭제 권한이 없습니다.");
     }
