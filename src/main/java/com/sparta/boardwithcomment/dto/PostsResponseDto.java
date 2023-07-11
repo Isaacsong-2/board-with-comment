@@ -9,28 +9,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class PostsResponseDto {
     private String title;
     private String content;
     private String username;
+    private int likeNum;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    private List<String> commentList;
+    private List<CommentResponseDto> commentList;
     public PostsResponseDto(Posts posts) {
-        List<String> commentList = new ArrayList<>();
-        List<Comment> comments = posts.getCommentList();
-        Collections.sort(comments, Comparator.comparing(Comment::getCreatedAt).reversed());
         this.title = posts.getTitle();
         this.content = posts.getContent();
         this.username = posts.getUser().getUsername();
+        this.likeNum = posts.getLikePostList().size();
         this.createdAt = posts.getCreatedAt();
         this.modifiedAt = posts.getModifiedAt();
-        for (Comment comment : posts.getCommentList()) {
-            commentList.add(comment.getContent());
-        }
-        this.commentList = commentList;
+        this.commentList = posts.getCommentList().stream()
+                .map(CommentResponseDto::new)
+                .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed())
+                .collect(Collectors.toList());
     }
 }
