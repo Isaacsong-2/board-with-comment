@@ -29,6 +29,7 @@ public class PostsResponseDto {
         this.createdAt = posts.getCreatedAt();
         this.modifiedAt = posts.getModifiedAt();
         this.commentList = posts.getCommentList().stream()
+                .filter(childComment -> childComment.getParent() == null) // 필터링: 상위 레벨 댓글만 포함
                 .map(CommentResponseDto::new)
                 .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed())
                 .collect(Collectors.toList());

@@ -4,6 +4,9 @@ import com.sparta.boardwithcomment.entity.Comment;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class CommentResponseDto{
@@ -13,7 +16,7 @@ public class CommentResponseDto{
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private String username;
-
+    private List<CommentResponseDto> commentList;
 
     public CommentResponseDto(Comment comment, String username) {
         this.id = comment.getId();
@@ -31,5 +34,9 @@ public class CommentResponseDto{
         this.modifiedAt = comment.getModifiedAt();
         this.username = comment.getUser().getUsername();
         this.likeNum = comment.getLikeCommentList().size();
+        this.commentList = comment.getChild().stream()
+                .map(CommentResponseDto::new)
+                .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed())
+                .collect(Collectors.toList());
     }
 }

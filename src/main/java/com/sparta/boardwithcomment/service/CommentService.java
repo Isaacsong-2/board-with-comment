@@ -34,7 +34,19 @@ public class CommentService {
                                 Locale.getDefault()
                         )
                 ));
-        Comment comment = new Comment(requestDto.getContent(), posts, userDetails.getUser());
+        Comment comment;
+        if (requestDto.getParentId() == 0) {
+            comment = new Comment(requestDto.getContent(), posts, userDetails.getUser());
+        } else {
+            Comment parentComment = commentRepository.findById(requestDto.getParentId()).orElseThrow(
+                    () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
+            );
+            if (parentComment.getPosts().getId() != requestDto.getPostId())
+                throw new IllegalArgumentException("같은 게시글의 댓글이 아닙니다.");
+            comment = new Comment(requestDto.getContent(), posts, userDetails.getUser());
+
+            comment.addParent(parentComment);
+        }
         commentRepository.save(comment);
         return new CommentResponseDto(comment, userDetails.getUsername());
     }
