@@ -24,7 +24,7 @@ public class Posts extends TimeStamped{
 //    @Column(nullable = false)
 //    private String username;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
