@@ -1,4 +1,4 @@
-package com.sparta.boardwithcomment.jwt;
+package com.sparta.boardwithcomment.common.jwt;
 
 import com.sparta.boardwithcomment.entity.UserRoleEnum;
 import io.jsonwebtoken.*;

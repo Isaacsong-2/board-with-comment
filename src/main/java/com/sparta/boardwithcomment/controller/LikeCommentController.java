@@ -1,7 +1,7 @@
 package com.sparta.boardwithcomment.controller;
 
 import com.sparta.boardwithcomment.dto.LikeCommentResponseDto;
-import com.sparta.boardwithcomment.security.UserDetailsImpl;
+import com.sparta.boardwithcomment.common.security.UserDetailsImpl;
 import com.sparta.boardwithcomment.service.LikeCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

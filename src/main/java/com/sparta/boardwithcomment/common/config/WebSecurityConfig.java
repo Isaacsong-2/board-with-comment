@@ -1,13 +1,12 @@
-package com.sparta.boardwithcomment.config;
+package com.sparta.boardwithcomment.common.config;
 
-import com.sparta.boardwithcomment.jwt.JwtAuthenticationFilter;
-import com.sparta.boardwithcomment.jwt.JwtAuthorizationFilter;
-import com.sparta.boardwithcomment.jwt.JwtUtil;
-import com.sparta.boardwithcomment.security.AuthenticationSuccessHandlerImpl;
-import com.sparta.boardwithcomment.security.UserDetailsServiceImpl;
+import com.sparta.boardwithcomment.common.jwt.JwtAuthenticationFilter;
+import com.sparta.boardwithcomment.common.jwt.JwtAuthorizationFilter;
+import com.sparta.boardwithcomment.common.jwt.JwtUtil;
+import com.sparta.boardwithcomment.common.security.AuthenticationSuccessHandlerImpl;
+import com.sparta.boardwithcomment.common.security.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;

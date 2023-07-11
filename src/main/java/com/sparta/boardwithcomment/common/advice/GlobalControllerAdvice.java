@@ -1,4 +1,4 @@
-package com.sparta.boardwithcomment.advice;
+package com.sparta.boardwithcomment.common.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

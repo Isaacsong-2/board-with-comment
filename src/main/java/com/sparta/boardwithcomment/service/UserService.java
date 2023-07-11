@@ -3,7 +3,7 @@ package com.sparta.boardwithcomment.service;
 import com.sparta.boardwithcomment.dto.UserRequestDto;
 import com.sparta.boardwithcomment.entity.User;
 import com.sparta.boardwithcomment.entity.UserRoleEnum;
-import com.sparta.boardwithcomment.jwt.JwtUtil;
+import com.sparta.boardwithcomment.common.jwt.JwtUtil;
 import com.sparta.boardwithcomment.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

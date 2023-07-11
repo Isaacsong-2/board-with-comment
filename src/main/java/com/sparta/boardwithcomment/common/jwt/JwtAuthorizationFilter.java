@@ -1,6 +1,6 @@
-package com.sparta.boardwithcomment.jwt;
+package com.sparta.boardwithcomment.common.jwt;
 
-import com.sparta.boardwithcomment.security.UserDetailsServiceImpl;
+import com.sparta.boardwithcomment.common.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

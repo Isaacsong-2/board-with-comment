@@ -1,4 +1,4 @@
-package com.sparta.boardwithcomment.config;
+package com.sparta.boardwithcomment.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

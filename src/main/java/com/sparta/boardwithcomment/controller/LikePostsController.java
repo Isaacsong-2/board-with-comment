@@ -1,12 +1,11 @@
 package com.sparta.boardwithcomment.controller;
 
 import com.sparta.boardwithcomment.dto.LikePostsResponseDto;
-import com.sparta.boardwithcomment.security.UserDetailsImpl;
+import com.sparta.boardwithcomment.common.security.UserDetailsImpl;
 import com.sparta.boardwithcomment.service.LikePostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

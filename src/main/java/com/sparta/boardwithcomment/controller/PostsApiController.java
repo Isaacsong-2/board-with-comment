@@ -2,7 +2,7 @@ package com.sparta.boardwithcomment.controller;
 
 import com.sparta.boardwithcomment.dto.PostsRequestDto;
 import com.sparta.boardwithcomment.dto.PostsResponseDto;
-import com.sparta.boardwithcomment.security.UserDetailsImpl;
+import com.sparta.boardwithcomment.common.security.UserDetailsImpl;
 import com.sparta.boardwithcomment.service.PostsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

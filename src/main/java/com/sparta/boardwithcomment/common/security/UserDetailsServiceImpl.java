@@ -1,4 +1,4 @@
-package com.sparta.boardwithcomment.security;
+package com.sparta.boardwithcomment.common.security;
 
 import com.sparta.boardwithcomment.entity.User;
 import com.sparta.boardwithcomment.repository.UserRepository;

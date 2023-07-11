@@ -1,10 +1,9 @@
-package com.sparta.boardwithcomment.jwt;
+package com.sparta.boardwithcomment.common.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.boardwithcomment.dto.LoginRequestDto;
-import com.sparta.boardwithcomment.dto.LoginResponseDto;
 import com.sparta.boardwithcomment.entity.UserRoleEnum;
-import com.sparta.boardwithcomment.security.UserDetailsImpl;
+import com.sparta.boardwithcomment.common.security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

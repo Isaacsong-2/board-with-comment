@@ -8,9 +8,8 @@ import com.sparta.boardwithcomment.entity.Posts;
 import com.sparta.boardwithcomment.entity.UserRoleEnum;
 import com.sparta.boardwithcomment.repository.CommentRepository;
 import com.sparta.boardwithcomment.repository.PostsRepository;
-import com.sparta.boardwithcomment.security.UserDetailsImpl;
+import com.sparta.boardwithcomment.common.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
