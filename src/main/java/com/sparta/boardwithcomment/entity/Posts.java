@@ -30,7 +30,7 @@ public class Posts extends TimeStamped{
     @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "posts")
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<LikePost> likePostList = new ArrayList<>();
 
     @Builder
