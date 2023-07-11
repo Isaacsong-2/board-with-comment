@@ -7,10 +7,12 @@ import com.sparta.boardwithcomment.entity.UserRoleEnum;
 import com.sparta.boardwithcomment.repository.PostsRepository;
 import com.sparta.boardwithcomment.common.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostsService {
     private final PostsRepository postsRepository;
+    private final MessageSource messageSource;
     public PostsResponseDto save(UserDetailsImpl userDetails, PostsRequestDto requestDto) {
         Posts posts = Posts.builder()
                             .title(requestDto.getTitle())
@@ -36,29 +39,62 @@ public class PostsService {
 
     public PostsResponseDto findOne(Long id) {
         return new PostsResponseDto(postsRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")));
+                new IllegalArgumentException(
+                        messageSource.getMessage(
+                                "not.found.post",
+                                null,
+                                "존재하지 않는 게시글입니다.",
+                                Locale.getDefault()
+                        )
+                )));
     }
 
     @Transactional
     public PostsResponseDto update(UserDetailsImpl userDetails, Long id, PostsRequestDto requestDto) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Posts posts = postsRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
+                new IllegalArgumentException(
+                        messageSource.getMessage(
+                                "not.found.post",
+                                null,
+                                "존재하지 않는 게시글입니다.",
+                                Locale.getDefault()
+                        )
+                ));
         if (posts.getUser().getUsername().equals(userDetails.getUsername()) ||
                 userDetails.getRole().equals(UserRoleEnum.ADMIN.toString())) {
             posts.update(requestDto);
             return new PostsResponseDto(posts);
-        } else throw new IllegalArgumentException("수정 권한이 없습니다.");
+        } else throw new IllegalArgumentException(
+                messageSource.getMessage(
+                        "not.authenticated",
+                        null,
+                        "수정/삭제 권한이 없습니다.",
+                        Locale.getDefault()
+                )
+        );
     }
 
     @Transactional
     public void delete(UserDetailsImpl userDetails, Long id) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Posts posts = postsRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
+                new IllegalArgumentException(
+                        messageSource.getMessage(
+                                "not.found.post",
+                                null,
+                                "존재하지 않는 게시글입니다.",
+                                Locale.getDefault()
+                        )
+                ));
         if (posts.getUser().getUsername().equals(userDetails.getUsername()) ||
                 userDetails.getRole().equals(UserRoleEnum.ADMIN.toString())) {
             postsRepository.delete(posts);
-        } else throw new IllegalArgumentException("삭제 권한이 없습니다.");
+        } else throw new IllegalArgumentException(
+                messageSource.getMessage(
+                        "not.authenticated",
+                        null,
+                        "수정/삭제 권한이 없습니다.",
+                        Locale.getDefault()
+                )
+        );
     }
 }
