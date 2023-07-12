@@ -22,10 +22,12 @@ public class Posts extends TimeStamped{
     @Column(nullable = false)
     private String content;
 
+    @OneToMany(mappedBy = "posts", orphanRemoval = true)
+    private List<PostCategory> postCategoryList = new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "posts", cascade = CascadeType.PERSIST, orphanRemoval = true)

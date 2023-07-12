@@ -1,11 +1,15 @@
 package com.sparta.boardwithcomment.service;
 
+import com.sparta.boardwithcomment.common.security.UserDetailsImpl;
 import com.sparta.boardwithcomment.dto.PostsRequestDto;
 import com.sparta.boardwithcomment.dto.PostsResponseDto;
+import com.sparta.boardwithcomment.entity.Category;
+import com.sparta.boardwithcomment.entity.PostCategory;
 import com.sparta.boardwithcomment.entity.Posts;
 import com.sparta.boardwithcomment.entity.UserRoleEnum;
+import com.sparta.boardwithcomment.repository.CategoryRepository;
+import com.sparta.boardwithcomment.repository.PostCategoryRepository;
 import com.sparta.boardwithcomment.repository.PostsRepository;
-import com.sparta.boardwithcomment.common.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -17,13 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class PostsService {
     private final PostsRepository postsRepository;
+    private final PostCategoryRepository postCategoryRepository;
+    private final CategoryRepository categoryRepository;
     private final MessageSource messageSource;
     public PostsResponseDto save(UserDetailsImpl userDetails, PostsRequestDto requestDto) {
         Posts posts = Posts.builder()
@@ -31,7 +37,18 @@ public class PostsService {
                             .content(requestDto.getContent())
                             .user(userDetails.getUser())
                             .build();
-        return new PostsResponseDto(postsRepository.save(posts));
+        List<String> categories = requestDto.getCategories();
+        for (String categoryName : categories) {
+            Category category = new Category(categoryName);
+            Optional<Category> existCategory = categoryRepository.findByName(categoryName);
+            if (existCategory.isEmpty()){
+                postCategoryRepository.save(new PostCategory(posts, category));
+            }
+            else{
+                postCategoryRepository.save(new PostCategory(posts, existCategory.get()));
+            }
+        }
+        return new PostsResponseDto(posts);
     }
 
     public Page<PostsResponseDto> findAll(int page, int size, String sortBy, boolean isAsc) {
@@ -52,6 +69,17 @@ public class PostsService {
                                 Locale.getDefault()
                         )
                 )));
+    }
+
+    public Page<PostsResponseDto> findAllByCategory(int page, int size, String sortBy, boolean isAsc, String categoryName) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Category foundCategory = categoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리입니다."));
+        List<Long> postsIds = postCategoryRepository.findAllByCategory(foundCategory)
+                .stream().map(category -> category.getPosts().getId()).toList();
+        return postsRepository.findAllByIdIn(postsIds, pageable).map(PostsResponseDto::new);
     }
 
     @Transactional

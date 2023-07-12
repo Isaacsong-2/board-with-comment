@@ -6,16 +6,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class PostsRequestDto {
     private String title;
     private String content;
-
-    @Builder
-    public PostsRequestDto(String title, String content){
-        this.title = title;
-        this.content = content;
-    }
-
+    private List<String> categories;
 }

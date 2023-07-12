@@ -1,6 +1,7 @@
 package com.sparta.boardwithcomment.dto;
 
 import com.sparta.boardwithcomment.entity.Comment;
+import com.sparta.boardwithcomment.entity.PostCategory;
 import com.sparta.boardwithcomment.entity.Posts;
 import lombok.Getter;
 
@@ -17,6 +18,7 @@ public class PostsResponseDto {
     private String content;
     private String username;
     private int likeNum;
+    private List<String> categories;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -33,5 +35,7 @@ public class PostsResponseDto {
                 .map(CommentResponseDto::new)
                 .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed())
                 .collect(Collectors.toList());
+        this.categories = posts.getPostCategoryList().stream()
+                .map((postCategory -> postCategory.getCategory().getName())).toList();
     }
 }
