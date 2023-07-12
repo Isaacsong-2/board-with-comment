@@ -2,8 +2,10 @@ package com.sparta.boardwithcomment.common.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.boardwithcomment.dto.LoginRequestDto;
+import com.sparta.boardwithcomment.entity.RefreshToken;
 import com.sparta.boardwithcomment.entity.UserRoleEnum;
 import com.sparta.boardwithcomment.common.security.UserDetailsImpl;
+import com.sparta.boardwithcomment.service.RefreshTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,10 +23,12 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final RefreshTokenService refreshTokenService;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, AuthenticationSuccessHandler authenticationSuccessHandler) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, AuthenticationSuccessHandler authenticationSuccessHandler, RefreshTokenService refreshTokenService) {
         this.jwtUtil = jwtUtil;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
+        this.refreshTokenService = refreshTokenService;
         setFilterProcessesUrl("/api/auth/login");
         setAuthenticationSuccessHandler(authenticationSuccessHandler);
     }
@@ -51,8 +55,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
-        String token = jwtUtil.createToken(username, role);
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+        String accessToken = jwtUtil.createAccessToken(username, role);
+        String refreshToken = jwtUtil.createRefreshToken();
+        refreshTokenService.saveToken(refreshToken, ((UserDetailsImpl) authResult.getPrincipal()).getUser().getId());
+
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, accessToken);
+        response.addHeader(JwtUtil.REFRESH_HEADER, refreshToken);
         authenticationSuccessHandler.onAuthenticationSuccess(request, response, authResult);
         log.info("로그인성공");
     }

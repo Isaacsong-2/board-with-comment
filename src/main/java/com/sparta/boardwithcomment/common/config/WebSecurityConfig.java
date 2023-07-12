@@ -1,10 +1,14 @@
 package com.sparta.boardwithcomment.common.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.boardwithcomment.common.jwt.JwtAuthenticationFilter;
 import com.sparta.boardwithcomment.common.jwt.JwtAuthorizationFilter;
 import com.sparta.boardwithcomment.common.jwt.JwtUtil;
 import com.sparta.boardwithcomment.common.security.AuthenticationSuccessHandlerImpl;
 import com.sparta.boardwithcomment.common.security.UserDetailsServiceImpl;
+import com.sparta.boardwithcomment.service.RefreshTokenService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,18 +24,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 @EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
-
-    public WebSecurityConfig(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService, AuthenticationConfiguration authenticationConfiguration) {
-        this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
-        this.authenticationConfiguration = authenticationConfiguration;
-    }
+    private final RefreshTokenService refreshTokenService;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -40,14 +41,14 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, authenticationSuccessHandler());
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, authenticationSuccessHandler(), refreshTokenService);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+        return new JwtAuthorizationFilter(jwtUtil, userDetailsService, objectMapper);
     }
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler(){
