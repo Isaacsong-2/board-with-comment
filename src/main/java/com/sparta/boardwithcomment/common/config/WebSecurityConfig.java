@@ -68,10 +68,11 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers("/api/auth/**").permitAll() // '/api/auth/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/{id}").permitAll()
-                        .anyRequest().authenticated() // 그 외 모든 요청 인증처리
-//                        .anyRequest().permitAll()
+//                        .anyRequest().authenticated() // 그 외 모든 요청 인증처리
+                        .anyRequest().permitAll()
         );
 
         // 필터 관리
