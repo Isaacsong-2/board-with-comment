@@ -53,7 +53,7 @@ public class CommentService {
 
     public CommentResponseDto update(Long id, UserDetailsImpl userDetails, CommentUpdateRequestDto requestDto) {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
-        if (userDetails.getUser().equals(comment.getUser()) || userDetails.getRole().equals(UserRoleEnum.ADMIN.toString())) {
+        if (userDetails.getUser().getId().equals(comment.getUser().getId()) || userDetails.getRole().equals(UserRoleEnum.ADMIN.toString())) {
             comment.update(requestDto);
         } else throw new IllegalArgumentException(
                 messageSource.getMessage(
@@ -68,7 +68,7 @@ public class CommentService {
 
     public void delete(Long id, UserDetailsImpl userDetails) {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
-        if (userDetails.getUser().equals(comment.getUser()) || userDetails.getRole().equals(UserRoleEnum.ADMIN.toString())) {
+        if (userDetails.getUser().getId().equals(comment.getUser().getId()) || userDetails.getRole().equals(UserRoleEnum.ADMIN.toString())) {
             commentRepository.delete(comment);
         } else throw new IllegalArgumentException(
                 messageSource.getMessage(

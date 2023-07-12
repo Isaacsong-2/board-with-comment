@@ -5,6 +5,7 @@ import com.sparta.boardwithcomment.dto.PostsResponseDto;
 import com.sparta.boardwithcomment.common.security.UserDetailsImpl;
 import com.sparta.boardwithcomment.service.PostsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,8 +26,13 @@ public class PostsApiController {
     }
 
     @GetMapping("/posts")
-    public List<PostsResponseDto> findAll(){
-        return postsService.findAll();
+    public List<PostsResponseDto> findAll(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc
+    ){
+        return postsService.findAll(page - 1, size, sortBy, isAsc).getContent();
     }
 
     @GetMapping("/posts/{id}")

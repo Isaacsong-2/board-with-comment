@@ -8,6 +8,10 @@ import com.sparta.boardwithcomment.repository.PostsRepository;
 import com.sparta.boardwithcomment.common.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,10 +34,11 @@ public class PostsService {
         return new PostsResponseDto(postsRepository.save(posts));
     }
 
-    public List<PostsResponseDto> findAll() {
-        return postsRepository.findAllByOrderByCreatedAtDesc().stream()
-                .map(PostsResponseDto::new)
-                .collect(Collectors.toList());
+    public Page<PostsResponseDto> findAll(int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return postsRepository.findAll(pageable).map(PostsResponseDto::new);
     }
 
 

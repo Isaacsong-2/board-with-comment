@@ -21,8 +21,6 @@ public class Posts extends TimeStamped{
     private String title;
     @Column(nullable = false)
     private String content;
-//    @Column(nullable = false)
-//    private String username;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
