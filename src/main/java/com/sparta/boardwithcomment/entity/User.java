@@ -25,15 +25,13 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Posts> postsList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<LikePost> likePostList = new ArrayList<>();
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<LikeComment> likeCommentList = new ArrayList<>();
     @Builder
     public User(String username, String password, UserRoleEnum role) {

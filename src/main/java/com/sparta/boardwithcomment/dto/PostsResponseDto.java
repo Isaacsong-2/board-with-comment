@@ -38,4 +38,8 @@ public class PostsResponseDto {
         this.categories = posts.getPostCategoryList().stream()
                 .map((postCategory -> postCategory.getCategory().getName())).toList();
     }
+    public PostsResponseDto(Posts posts, List<String> categories) {
+        this(posts);
+        this.categories = categories;
+    }
 }

@@ -48,7 +48,7 @@ public class PostsService {
                 postCategoryRepository.save(new PostCategory(posts, existCategory.get()));
             }
         }
-        return new PostsResponseDto(posts);
+        return new PostsResponseDto(posts, categories);
     }
 
     public Page<PostsResponseDto> findAll(int page, int size, String sortBy, boolean isAsc) {
