@@ -58,4 +58,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void withdraw(User user) {
+        userRepository.delete(user);
+    }
 }

@@ -16,7 +16,7 @@ public class LikePost {
     @ManyToOne(fetch = FetchType.LAZY)
     private Posts posts;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private User user;
 
     public LikePost(Posts posts, User user) {

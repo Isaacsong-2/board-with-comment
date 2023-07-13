@@ -44,6 +44,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("회원가입 성공");
     }
 
+    @DeleteMapping("/auth/withdraw")
+    public ResponseEntity<String> withdraw(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        userService.withdraw(userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK).body("회원 탈퇴 성공");
+    }
+
     @GetMapping("/auth/refresh")
     public void refresh(HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal UserDetailsImpl userDetails){
         validateHeader(request);

@@ -31,7 +31,7 @@ public class Comment extends TimeStamped{
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<Comment> child = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private User user;
 
